@@ -62,11 +62,11 @@ const DesignCanvas: React.FC<DesignCanvasProps> = ({
   }, [drawFunction, width, height, customizations, onCanvasReady]);
 
   return (
-    <div className="relative mx-auto bg-white rounded-lg shadow-2xl overflow-hidden border border-slate-200">
+    <div className="relative w-full overflow-auto mx-auto bg-white shadow-2xl border border-slate-200 p-4">
       <canvas 
         ref={canvasRef} 
         style={{ width: `${width}px`, height: `${height}px` }}
-        className="block"
+        className="block mx-auto"
       />
     </div>
   );

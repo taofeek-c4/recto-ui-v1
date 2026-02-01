@@ -81,8 +81,8 @@ const Layout: React.FC<LayoutProps> = ({ onLogout }) => {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto focus:outline-none">
-          <div className="p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 h-screen overflow-auto focus:outline-none">
+          <div className="p-2 sm:p-3 lg:p-3 h-full">
             <Outlet />
           </div>
         </main>

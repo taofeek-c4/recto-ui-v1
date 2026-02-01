@@ -1,6 +1,8 @@
 
 import { AUTH_TOKEN_KEY, API_BASE_URL } from '../constants';
 
+const API_URL = import.meta.env.VITE_API_URL || API_BASE_URL
+
 const getHeaders = () => {
   const token = localStorage.getItem(AUTH_TOKEN_KEY);
   return {
@@ -12,16 +14,22 @@ const getHeaders = () => {
 export const api = {
   // Added Promise<any> to prevent restrictive union type inference in mock service
   async post(endpoint: string, data: any): Promise<any> {
-    // In a real scenario, this would call the backend. 
-    // For this implementation, we simulate the FastAPI interaction.
-    console.log(`API POST to ${endpoint}`, data);
     
-    // Simulating specific endpoint behavior for demo/prototype
-    if (endpoint === '/login') {
-      return { access_token: 'mock-jwt-token', token_type: 'bearer' };
-    }
+    const res = await fetch(`${API_URL}/${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+
+    const payload = await res.json()
+    // if (endpoint === '/login') {
+    //   return { access_token: 'mock-jwt-token', token_type: 'bearer' };
+    // }
     
-    return { status: 'success' };
+    // return { status: 'success' };
+    return payload
   },
 
   // Added Promise<any> to prevent restrictive union type inference in mock service
