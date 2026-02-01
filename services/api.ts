@@ -1,48 +1,49 @@
+import { AUTH_TOKEN_KEY, API_BASE_URL } from "../constants";
 
-import { AUTH_TOKEN_KEY, API_BASE_URL } from '../constants';
-
-const API_URL = import.meta.env.VITE_API_URL || API_BASE_URL
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getHeaders = () => {
   const token = localStorage.getItem(AUTH_TOKEN_KEY);
   return {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 };
 
 export const api = {
   // Added Promise<any> to prevent restrictive union type inference in mock service
   async post(endpoint: string, data: any): Promise<any> {
-    
+    if (endpoint === "login") {
+      return { access_token: "mock-jwt-token", token_type: "bearer" };
+    }
+
     const res = await fetch(`${API_URL}/${endpoint}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
-    })
+      body: JSON.stringify(data),
+    });
 
-    const payload = await res.json()
-    // if (endpoint === '/login') {
-    //   return { access_token: 'mock-jwt-token', token_type: 'bearer' };
-    // }
-    
+    const payload = await res.json();
+
     // return { status: 'success' };
-    return payload
+    return payload;
   },
 
   // Added Promise<any> to prevent restrictive union type inference in mock service
   async get(endpoint: string, params?: Record<string, string>): Promise<any> {
-    const url = new URL(`${API_BASE_URL}${endpoint}`);
+    const url = new URL(`${API_URL}/${endpoint}`);
     if (params) {
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+      Object.keys(params).forEach((key) =>
+        url.searchParams.append(key, params[key]),
+      );
     }
-    
+
     console.log(`API GET to ${endpoint}`, params);
 
     // Mock response for /send_chat
-    if (endpoint === '/send_chat') {
+    if (endpoint === "/send_chat") {
       return {
         canvas_code: `
           const draw = (ctx, width, height, custom = {}) => {
@@ -72,22 +73,34 @@ export const api = {
             ctx.fillText(texts.date || "OCTOBER 24, 2024", width / 2, height - 100);
           };
           return draw;
-        `
+        `,
       };
     }
 
-    if (endpoint === '/get_profile') {
-      return { id: '1', email: 'user@example.com', full_name: 'Alex Design' };
+    if (endpoint === "/get_profile") {
+      return { id: "1", email: "user@example.com", full_name: "Alex Design" };
     }
 
-    if (endpoint === '/get_all_images') {
+    if (endpoint === "/get_all_images") {
       return [
-        { id: '1', prompt: 'Music Festival Flyer', timestamp: new Date().toISOString() },
-        { id: '2', prompt: 'Business Conference', timestamp: new Date().toISOString() },
-        { id: '3', prompt: 'Art Exhibition', timestamp: new Date().toISOString() },
+        {
+          id: "1",
+          prompt: "Music Festival Flyer",
+          timestamp: new Date().toISOString(),
+        },
+        {
+          id: "2",
+          prompt: "Business Conference",
+          timestamp: new Date().toISOString(),
+        },
+        {
+          id: "3",
+          prompt: "Art Exhibition",
+          timestamp: new Date().toISOString(),
+        },
       ];
     }
 
     return {};
-  }
+  },
 };

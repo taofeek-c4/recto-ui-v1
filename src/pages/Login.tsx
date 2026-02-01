@@ -20,7 +20,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await api.post('/login', { email, password });
+      const response = await api.post('login', { email, password });
       onLogin(response.access_token);
       navigate('/');
     } catch (err) {
