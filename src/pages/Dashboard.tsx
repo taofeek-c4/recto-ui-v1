@@ -39,7 +39,7 @@ const DashboardPage: React.FC = () => {
             Just describe it and watch the magic happen.
           </p>
           <button 
-            onClick={() => navigate('/workspace')}
+            onClick={() => navigate('/dashboard/workspace')}
             className="px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-indigo-50 transition-all shadow-lg"
           >
             Create New Design
@@ -64,9 +64,9 @@ const DashboardPage: React.FC = () => {
             <div 
               key={design.id} 
               className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all cursor-pointer"
-              onClick={() => navigate(`/workspace/${design.id}`)}
+              onClick={() => navigate(`/dashboard/workspace/${design.id}`)}
             >
-              <div className="aspect-[4/5] bg-slate-100 flex items-center justify-center overflow-hidden">
+              <div className="aspect-4/5 bg-slate-100 flex items-center justify-center overflow-hidden">
                 <img 
                   src={`https://picsum.photos/seed/${design.id}/400/500`} 
                   alt={design.prompt}

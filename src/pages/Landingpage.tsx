@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // --- Components ---
 
@@ -22,11 +23,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="shrink-0 flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">R</span>
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+              {/* <span className="text-white font-bold text-lg">R</span> */}
+              <img src="/logo.png" alt="Recto logo" />
             </div>
             <span className="font-bold text-xl tracking-tight text-slate-900">
-              RECTO
+              <span className="text-indigo-600">RECTO</span> AI
             </span>
           </div>
 
@@ -54,12 +56,18 @@ const Navbar = () => {
 
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="text-gray-900 font-medium hover:text-indigo-600 px-3 py-2">
+            <Link
+              to="/login"
+              className="text-gray-900 font-medium hover:text-indigo-600 px-3 py-2"
+            >
               Sign In
-            </button>
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-600/20">
+            </Link>
+            <Link
+              to="/signup"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-all shadow-lg shadow-indigo-600/20"
+            >
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,12 +95,18 @@ const Navbar = () => {
           <a href="#showcase" className="block text-gray-600">
             Showcase
           </a>
-          <button className="w-full text-left text-gray-900 font-medium py-2">
+          <Link
+            to="/login"
+            className="text-gray-900 font-medium hover:text-indigo-600 px-3 py-2"
+          >
             Sign In
-          </button>
-          <button className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium">
+          </Link>
+          <Link
+            to="/signup"
+            className="w-full bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium block mt-4"
+          >
             Get Started
-          </button>
+          </Link>
         </div>
       )}
     </nav>
@@ -104,8 +118,8 @@ const Hero = () => {
     <section className="pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center px-3 py-1 rounded-full border border-indigo-100 bg-indigo-50 text-indigo-600 text-sm font-medium mb-8">
-          <Zap className="w-4 h-4 mr-2 fill-indigo-600" />
+        <div className="inline-flex items-center px-3 py-1 rounded-full border border-yellow-100 bg-yellow-50 text-yellow-600 text-sm font-medium mb-8">
+          <Zap className="w-4 h-4 mr-2 fill-yellow-600" />
           <span>Beta Version is now live with quality generation</span>
         </div>
 
@@ -126,10 +140,10 @@ const Hero = () => {
 
         {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-          <button className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/25 hover:scale-105">
+          <Link to="/login" className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/25 hover:scale-105">
             <Wand2 className="w-5 h-5" />
             Start Creating
-          </button>
+          </Link>
           <button className="flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-indigo-600 hover:text-indigo-600 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg transition-all">
             View Gallery
           </button>
@@ -247,9 +261,9 @@ const UseCases = () => {
               ))}
             </ul>
 
-            <button className="mt-10 flex items-center gap-2 text-indigo-600 font-bold hover:gap-3 transition-all">
+            {/* <button className="mt-10 flex items-center gap-2 text-indigo-600 font-bold hover:gap-3 transition-all">
               See all use cases <ArrowRight className="w-4 h-4" />
-            </button>
+            </button> */}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
