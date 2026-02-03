@@ -1,6 +1,5 @@
-
-import React, { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AUTH_TOKEN_KEY } from '../constants';
 
 // Pages
@@ -18,7 +17,10 @@ import Layout from './components/Layout';
 import RectoLandingPage from './pages/Landingpage';
 
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem(AUTH_TOKEN_KEY));
+  // It is safer to initialize state with a check for the token's existence directly
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    !!localStorage.getItem(AUTH_TOKEN_KEY)
+  );
 
   const login = (token: string) => {
     localStorage.setItem(AUTH_TOKEN_KEY, token);
@@ -31,16 +33,29 @@ const App: React.FC = () => {
   };
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={!isAuthenticated ? <LoginPage onLogin={login} /> : <Navigate to="/" />} />
-        <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to="/dashboard" />} />
+        {/* If user is logged in, redirect Login/Signup to Dashboard */}
+        <Route 
+          path="/login" 
+          element={!isAuthenticated ? <LoginPage onLogin={login} /> : <Navigate to="/dashboard" replace />} 
+        />
+        <Route 
+          path="/signup" 
+          element={!isAuthenticated ? <SignupPage /> : <Navigate to="/dashboard" replace />} 
+        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        
+        {/* Landing Page at Root */}
         <Route path="/" element={<RectoLandingPage />} />
 
         {/* Protected Routes */}
-        <Route path="/dashboard" element={isAuthenticated ? <Layout onLogout={logout} /> : <Navigate to="/login" />}>
+        <Route 
+          path="/dashboard" 
+          element={isAuthenticated ? <Layout onLogout={logout} /> : <Navigate to="/login" replace />}
+        >
+          
           <Route index element={<DashboardPage />} />
           <Route path="workspace" element={<WorkspacePage />} />
           <Route path="workspace/:id" element={<WorkspacePage />} />
@@ -49,7 +64,7 @@ const App: React.FC = () => {
           <Route path="profile" element={<ProfilePage onLogout={logout} />} />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 

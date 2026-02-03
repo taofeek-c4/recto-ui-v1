@@ -128,7 +128,7 @@ const Hero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
           <button className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/25 hover:scale-105">
             <Wand2 className="w-5 h-5" />
-            Start Creating for Free
+            Start Creating
           </button>
           <button className="flex items-center justify-center gap-2 bg-white border border-gray-200 hover:border-indigo-600 hover:text-indigo-600 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg transition-all">
             View Gallery
@@ -302,7 +302,7 @@ const CTA = () => {
             </h2>
             <p className="text-indigo-100 text-lg mb-10 max-w-2xl mx-auto">
               Join thousands of creators using Recto AI to speed up their
-              workflow. No credit card required for free trial.
+              workflow.
             </p>
             <button className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg">
               Launch Recto Dashboard
@@ -325,7 +325,7 @@ const Footer = () => {
             </span>
             <p className="text-sm text-slate-400">
               AI-powered design for everyone.
-              <br />© 2024 Recto AI Inc.
+              <br />© {new Date().getFullYear()} Recto AI Inc.
             </p>
           </div>
 
