@@ -6,17 +6,52 @@ import CanvasDownloader from "../components/DownloadButton";
 import ChatMessages from "../components/ChatMessages";
 import { Message } from "../components/ChatMessages";
 
+export const cleanResponse = (text: string) => {
+  if (!text) return "";
+  // Regex matches starting ``` + optional language name + newline, AND ending ```
+  return text.replace(/^```(\w+)?\n/g, "").replace(/```$/g, "");
+};
+
 const WorkspacePage: React.FC = () => {
   const { id } = useParams();
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [designCode, setDesignCode] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
-  const cleanResponse = (text: string) => {
-    // Regex matches starting ``` + optional language name + newline, AND ending ```
-    return text.replace(/^```(\w+)?\n/g, "").replace(/```$/g, "");
-  };
+  // Fetch conversation history when component mounts with an id
+  useEffect(() => {
+    if (id) {
+      const fetchHistory = async () => {
+        setIsLoadingHistory(true);
+        try {
+          const response = await api.get(`history/${id}`);
+          if (response?.conversation) {
+            setMessages(response.conversation);
+          }
+        } catch (error) {
+          console.error("Failed to load history:", error);
+        } finally {
+          setIsLoadingHistory(false);
+        }
+      };
+      fetchHistory();
+    } else {
+      setMessages([]);
+      setDesignCode(null);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    try {
+      // console.log(messages[messages.length - 1]);
+      setDesignCode(JSON.parse(cleanResponse(messages[messages.length - 1]?.content))?.canvas || null);
+    } catch (e) {
+      console.log("");
+    }
+    // setDesignCode(JSON.parse(cleanResponse(messages[messages.length - 1]?.content))?.canvas || null);
+  }, [messages])
 
   const iframeRef = useRef(null);
 
@@ -34,13 +69,11 @@ const WorkspacePage: React.FC = () => {
       },
     ]);
 
+    setPrompt("");
+
     setIsGenerating(true);
 
     const session_id = id || String(Date.now());
-
-    if (!id) {
-      navigate(`/dashboard/workspace/${session_id}`);
-    }
 
     try {
       const responseData = await api.post("chat", {
@@ -51,6 +84,7 @@ const WorkspacePage: React.FC = () => {
       // console.log("Raw AI Response:", responseData?.response);
 
       const aiMessage = cleanResponse(responseData?.response);
+      console.log("Cleaned AI Message:", aiMessage);
       setDesignCode(JSON.parse(aiMessage).canvas);
       setMessages((prev) => [
         ...prev,
@@ -65,103 +99,41 @@ const WorkspacePage: React.FC = () => {
     } finally {
       setIsGenerating(false);
     }
+
+    if (!id) {
+      navigate(`/dashboard/workspace/${session_id}`);
+    }
   };
+
+  if(isLoadingHistory){
+    return <div className="h-full flex items-center justify-center">
+      <svg
+        className="animate-spin h-10 w-10 text-indigo-600"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>;
+  }
 
   return (
     <div className="h-full overflow-auto flex flex-col lg:flex-row gap-4">
       {/* Sidebar Controls */}
       <div className="w-full lg:w-80 flex flex-col justify-end space-y-6">
         {/* Editing Controls - Only visible if design exists */}
-        {/* {designCode && (
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 overflow-auto max-h-[500px]">
-            <h3 className="font-bold text-slate-800 mb-4">Edit Content</h3>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Main Title
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                  value={customTexts.title}
-                  onChange={(e) =>
-                    setCustomTexts({ ...customTexts, title: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Subtitle
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                  value={customTexts.subtitle}
-                  onChange={(e) =>
-                    setCustomTexts({ ...customTexts, subtitle: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Date / Info
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm"
-                  value={customTexts.date}
-                  onChange={(e) =>
-                    setCustomTexts({ ...customTexts, date: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="pt-4 border-t border-slate-100">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Font Size ({fontSize}px)
-                </label>
-                <input
-                  type="range"
-                  min="20"
-                  max="120"
-                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                  value={fontSize}
-                  onChange={(e) => setFontSize(parseInt(e.target.value))}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100">
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                    Background
-                  </label>
-                  <input
-                    type="color"
-                    className="w-full h-10 p-1 bg-white border border-slate-200 rounded-lg cursor-pointer"
-                    value={customColors.bg}
-                    onChange={(e) =>
-                      setCustomColors({ ...customColors, bg: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                    Text Color
-                  </label>
-                  <input
-                    type="color"
-                    className="w-full h-10 p-1 bg-white border border-slate-200 rounded-lg cursor-pointer"
-                    value={customColors.text}
-                    onChange={(e) =>
-                      setCustomColors({ ...customColors, text: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )} */}
         <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 h-full flex gap-2 flex-col">
           <h3 className="font-bold text-slate-800 mb-2">AI Design Assistant</h3>
           {/* Component to display messages */}
