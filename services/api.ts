@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000"; 
+const API_URL = import.meta.env.VITE_API_URL || "https://recto-backend.onrender.com"; 
 const auth_token = localStorage.getItem('AUTH_TOKEN_KEY')
 
 const getHeaders = () => {
