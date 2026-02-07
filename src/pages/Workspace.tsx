@@ -48,6 +48,8 @@ const WorkspacePage: React.FC = () => {
         message: prompt,
       });
 
+      // console.log("Raw AI Response:", responseData?.response);
+
       const aiMessage = cleanResponse(responseData?.response);
       setDesignCode(JSON.parse(aiMessage).canvas);
       setMessages((prev) => [
@@ -57,7 +59,7 @@ const WorkspacePage: React.FC = () => {
           content: JSON.parse(aiMessage)?.ai_message,
         },
       ]);
-      console.log(aiMessage);
+      // console.log(aiMessage);
     } catch (error) {
       console.error("Generation failed", error);
     } finally {

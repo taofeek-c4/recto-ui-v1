@@ -16,7 +16,7 @@ const DashboardPage: React.FC = () => {
         api.get('get_profile'),
         api.get('get_all_images')
       ]);
-      console.log(user.metadata)
+      // console.log(user.metadata)
       setProfile(user.metadata);
       setRecentDesigns(designs);
       setLoading(false)

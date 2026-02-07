@@ -1,8 +1,8 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://recto-backend.onrender.com"; 
-const auth_token = localStorage.getItem('AUTH_TOKEN_KEY')
+const API_URL = "https://recto-backend.onrender.com"; 
+const auth_token = localStorage.getItem("AUTH_TOKEN_KEY")
 
 const getHeaders = () => {
-  console.log("Auth Token in Headers:", auth_token); // Debugging log
+  // console.log("Auth Token in Headers:", auth_token); // Debugging log
   return {
     "Content-Type": "application/json",
     ...(auth_token ? { Authorization: `Bearer ${auth_token}` } : {}),
@@ -33,14 +33,9 @@ export const api = {
 
   // Added Promise<any> to prevent restrictive union type inference in mock service
   async get(endpoint: string, params?: Record<string, string>): Promise<any> {
-    const url = new URL(`${API_URL}/${endpoint}`);
-    if (params) {
-      Object.keys(params).forEach((key) =>
-        url.searchParams.append(key, params[key]),
-      );
-    }
+    const url = `${API_URL}/${endpoint}` + (params ? '?' + new URLSearchParams(params).toString() : '');
 
-    if (endpoint === "/get_all_images") {
+    if (endpoint === "get_all_images") {
       return [
         {
           id: "1",
