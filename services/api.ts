@@ -1,10 +1,8 @@
-import { AUTH_TOKEN_KEY, API_BASE_URL } from "../constants";
-
-const API_URL = "https://recto-backend.onrender.com"; 
-const auth_token = localStorage.getItem("recto_auth_token")
+const API_URL = "http://127.0.0.1:8000"; 
+const auth_token = localStorage.getItem('AUTH_TOKEN_KEY')
 
 const getHeaders = () => {
-  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  console.log("Auth Token in Headers:", auth_token); // Debugging log
   return {
     "Content-Type": "application/json",
     ...(auth_token ? { Authorization: `Bearer ${auth_token}` } : {}),

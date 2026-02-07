@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AUTH_TOKEN_KEY } from '../constants';
 
 // Pages
 import LoginPage from './pages/Login';
@@ -19,16 +18,16 @@ import RectoLandingPage from './pages/Landingpage';
 const App: React.FC = () => {
   // It is safer to initialize state with a check for the token's existence directly
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    !!localStorage.getItem(AUTH_TOKEN_KEY)
+    !!localStorage.getItem('AUTH_TOKEN_KEY')
   );
 
   const login = (token: string) => {
-    localStorage.setItem(AUTH_TOKEN_KEY, token);
+    localStorage.setItem('AUTH_TOKEN_KEY', token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem('AUTH_TOKEN_KEY');
     setIsAuthenticated(false);
   };
 
