@@ -13,8 +13,8 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       const [user, designs] = await Promise.all([
-        api.get('/get_profile'),
-        api.get('/get_all_images')
+        api.get('get_profile'),
+        api.get('get_all_images')
       ]);
       console.log(user.metadata)
       setProfile(user.metadata);

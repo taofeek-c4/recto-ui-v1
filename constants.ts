@@ -1,7 +1,7 @@
 
-export const API_BASE_URL = 'https://api.recto.ai'; // Placeholder for FastAPI backend
-export const AUTH_TOKEN_KEY = 'recto_auth_token';
-export const APP_NAME = 'Recto';
+// export const API_BASE_URL = 'https://api.recto.ai'; // Placeholder for FastAPI backend
+// export const AUTH_TOKEN_KEY = 'recto_auth_token';
+// export const APP_NAME = 'Recto';
 
 export const COLORS = {
   primary: '#4F46E5', // Indigo 600

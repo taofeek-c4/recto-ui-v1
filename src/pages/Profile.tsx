@@ -11,7 +11,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onLogout }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/get_profile').then(res => {
+    api.get('get_profile').then(res => {
       setUser(res);
       setLoading(false);
     });

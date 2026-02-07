@@ -8,7 +8,7 @@ const GalleryPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/get_all_images').then(setDesigns);
+    api.get('get_all_images').then(setDesigns);
   }, []);
 
   return (
