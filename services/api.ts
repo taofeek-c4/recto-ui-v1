@@ -2,7 +2,7 @@ const API_URL = "https://recto-backend.onrender.com";
 const auth_token = localStorage.getItem("AUTH_TOKEN_KEY")
 
 const getHeaders = () => {
-  // console.log("Auth Token in Headers:", auth_token); // Debugging log
+  console.log("Auth Token in Headers:", auth_token); // Debugging log
   return {
     "Content-Type": "application/json",
     ...(auth_token ? { Authorization: `Bearer ${auth_token}` } : {}),
