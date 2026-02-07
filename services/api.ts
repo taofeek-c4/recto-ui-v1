@@ -14,8 +14,7 @@ const getHeaders = () => {
 export const api = {
   async post(endpoint: string, data: any): Promise<any> {
     try {
-      console.log(auth_token)
-      const res = await fetch(`${API_URL}/${endpoint}`, {
+      const res = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify(data),
