@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
+import DashboardSkeleton from '../components/DashboardSkeleton';
 
 const DashboardPage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [recentDesigns, setRecentDesigns] = useState<any[]>([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     const loadData = async () => {
@@ -14,18 +16,24 @@ const DashboardPage: React.FC = () => {
         api.get('/get_profile'),
         api.get('/get_all_images')
       ]);
-      setProfile(user);
+      console.log(user.metadata)
+      setProfile(user.metadata);
       setRecentDesigns(designs);
+      setLoading(false)
     };
     loadData();
   }, []);
+
+  if(loading){
+    return <DashboardSkeleton />
+  }
 
   return (
     <div className="max-w-6xl mx-auto">
       {/* Welcome Section */}
       <div className="mb-10">
         <h2 className="text-3xl font-bold text-slate-900 display-font">
-          Welcome back, {profile?.full_name?.split(' ')[0] || 'Designer'}!
+          Welcome back, {profile?.display_name?.split(' ')[0] || ''}!
         </h2>
         <p className="text-slate-500 mt-2">What would you like to create today?</p>
       </div>

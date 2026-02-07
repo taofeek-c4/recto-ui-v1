@@ -1,84 +1,46 @@
 import { AUTH_TOKEN_KEY, API_BASE_URL } from "../constants";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const auth_token = localStorage.getItem("recto_auth_token")
 
 const getHeaders = () => {
   const token = localStorage.getItem(AUTH_TOKEN_KEY);
   return {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(auth_token ? { Authorization: `Bearer ${auth_token}` } : {}),
   };
 };
 
 export const api = {
-  // Added Promise<any> to prevent restrictive union type inference in mock service
   async post(endpoint: string, data: any): Promise<any> {
-    if (endpoint === "login") {
-      return { access_token: "mock-jwt-token", token_type: "bearer" };
+    try {
+      console.log(auth_token)
+      const res = await fetch(`${API_URL}/${endpoint}`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify(data),
+      });
+
+      const payload = await res.json();
+
+      if(!res.ok){
+        throw(payload?.detail)
+      }
+
+      // return { status: 'success' };
+      return payload;
+    } catch (error) {
+      return error
     }
-
-    const res = await fetch(`${API_URL}/${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const payload = await res.json();
-
-    // return { status: 'success' };
-    return payload;
   },
 
   // Added Promise<any> to prevent restrictive union type inference in mock service
   async get(endpoint: string, params?: Record<string, string>): Promise<any> {
-    const url = new URL(`${API_URL}/${endpoint}`);
+    const url = new URL(`${API_URL}${endpoint}`);
     if (params) {
       Object.keys(params).forEach((key) =>
         url.searchParams.append(key, params[key]),
       );
-    }
-
-    console.log(`API GET to ${endpoint}`, params);
-
-    // Mock response for /send_chat
-    if (endpoint === "/send_chat") {
-      return {
-        canvas_code: `
-          const draw = (ctx, width, height, custom = {}) => {
-            const { texts = {}, colors = {}, fontSize = 48 } = custom;
-            
-            // Background
-            ctx.fillStyle = colors.bg || '#1e293b';
-            ctx.fillRect(0, 0, width, height);
-            
-            // Decorative elements
-            ctx.strokeStyle = colors.accent || '#f59e0b';
-            ctx.lineWidth = 10;
-            ctx.strokeRect(40, 40, width - 80, height - 80);
-            
-            // Main Text
-            ctx.fillStyle = colors.text || '#ffffff';
-            ctx.font = \`bold \${fontSize}px Inter\`;
-            ctx.textAlign = 'center';
-            ctx.fillText(texts.title || "MODERN EVENT", width / 2, height / 2 - 20);
-            
-            ctx.font = '300 24px Inter';
-            ctx.fillText(texts.subtitle || "AI GENERATED DESIGN", width / 2, height / 2 + 30);
-            
-            // Details
-            ctx.fillStyle = colors.accent || '#f59e0b';
-            ctx.font = '500 18px Inter';
-            ctx.fillText(texts.date || "OCTOBER 24, 2024", width / 2, height - 100);
-          };
-          return draw;
-        `,
-      };
-    }
-
-    if (endpoint === "/get_profile") {
-      return { id: "1", email: "user@example.com", full_name: "Alex Design" };
     }
 
     if (endpoint === "/get_all_images") {
@@ -101,6 +63,14 @@ export const api = {
       ];
     }
 
-    return {};
+    // console.log(getHeaders())
+
+    const res = await fetch(url, {
+      headers: getHeaders()
+    })
+
+    const data = await res.json()
+
+    return data;
   },
 };

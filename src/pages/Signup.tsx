@@ -4,15 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 
 const SignupPage: React.FC = () => {
-  const [formData, setFormData] = useState({ fullName: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ display_name: '', email: '', password: '' });
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/signup', formData);
+      const res = await api.post('signup', formData);
       navigate('/login');
     } catch (err) {
       console.error(err);
@@ -38,8 +38,8 @@ const SignupPage: React.FC = () => {
                 required
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none"
                 placeholder="Alex Designer"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                value={formData.display_name}
+                onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
               />
             </div>
 

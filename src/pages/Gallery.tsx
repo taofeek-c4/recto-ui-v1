@@ -33,7 +33,7 @@ const GalleryPage: React.FC = () => {
             className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all cursor-pointer"
             onClick={() => navigate(`/workspace/${design.id}`)}
           >
-            <div className="aspect-[4/5] bg-slate-100 flex items-center justify-center overflow-hidden">
+            <div className="aspect-4/5 bg-slate-100 flex items-center justify-center overflow-hidden">
               <img 
                 src={`https://picsum.photos/seed/${design.id}/400/500`} 
                 alt={design.prompt}

@@ -140,7 +140,10 @@ const Hero = () => {
 
         {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-          <Link to="/login" className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/25 hover:scale-105">
+          <Link
+            to="/login"
+            className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-xl shadow-indigo-600/25 hover:scale-105"
+          >
             <Wand2 className="w-5 h-5" />
             Start Creating
           </Link>
@@ -318,9 +321,9 @@ const CTA = () => {
               Join thousands of creators using Recto AI to speed up their
               workflow.
             </p>
-            <button className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg">
+            <Link to="/dashboard" className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-lg">
               Launch Recto Dashboard
-            </button>
+            </Link>
           </div>
         </div>
       </div>

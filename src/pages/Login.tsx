@@ -14,17 +14,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
       const response = await api.post('login', { email, password });
-      onLogin(response.access_token);
-      navigate('/');
+      
+      if (response.access_token){
+        navigate('/dashboard');
+        onLogin(response.access_token);
+      } else {
+        throw(response)
+      }
     } catch (err) {
-      setError('Invalid credentials. Please try again.');
+      setError(String(err));
     } finally {
       setLoading(false);
     }

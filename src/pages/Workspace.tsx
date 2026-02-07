@@ -1,24 +1,38 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
-import DesignCanvas from "../components/DesignCanvas";
 import DesignCanvass from "../components/HTMLDesign";
 import CanvasDownloader from "../components/DownloadButton";
+import ChatMessages from "../components/ChatMessages";
+import { Message } from "../components/ChatMessages";
 
 const WorkspacePage: React.FC = () => {
   const { id } = useParams();
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [designCode, setDesignCode] = useState<string | null>(null);
-  
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const cleanResponse = (text: string) => {
+    // Regex matches starting ``` + optional language name + newline, AND ending ```
+    return text.replace(/^```(\w+)?\n/g, "").replace(/```$/g, "");
+  };
 
   const iframeRef = useRef(null);
 
   const navigate = useNavigate();
 
-  const handleGenerate = async (e?: React.FormEvent) => {
+  const handleGenerate = async (e?: React.SyntheticEvent) => {
     if (e) e.preventDefault();
     if (!prompt.trim()) return;
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "user",
+        content: prompt,
+      },
+    ]);
 
     setIsGenerating(true);
 
@@ -34,8 +48,16 @@ const WorkspacePage: React.FC = () => {
         message: prompt,
       });
 
-      setDesignCode(JSON.parse(responseData?.response).canvas);
-      console.log(JSON.parse(responseData?.response).canvas);
+      const aiMessage = cleanResponse(responseData?.response);
+      setDesignCode(JSON.parse(aiMessage).canvas);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: JSON.parse(aiMessage)?.ai_message,
+        },
+      ]);
+      console.log(aiMessage);
     } catch (error) {
       console.error("Generation failed", error);
     } finally {
@@ -138,10 +160,12 @@ const WorkspacePage: React.FC = () => {
             </div>
           </div>
         )} */}
-        {/* Prompt Input */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-4">AI Design Assistant</h3>
-          <form onSubmit={handleGenerate} className="space-y-4">
+        <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 h-full flex gap-2 flex-col">
+          <h3 className="font-bold text-slate-800 mb-2">AI Design Assistant</h3>
+          {/* Component to display messages */}
+          <ChatMessages messages={messages} />
+          {/* Prompt Input */}
+          <form onSubmit={handleGenerate} className="space-y-3 mt-auto">
             <textarea
               className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none resize-none text-sm"
               rows={4}
@@ -189,42 +213,8 @@ const WorkspacePage: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center bg-slate-200 rounded-3xl p-4 border-4 border-dashed border-slate-300 relative">
         {designCode ? (
           <>
-            {/* <div className="mb-3 flex space-x-2">
-              <button
-                onClick={() => downloadImage("png")}
-                className="px-4 py-2 bg-white text-slate-700 text-sm font-bold rounded-lg shadow hover:bg-slate-50 transition-colors"
-              >
-                PNG
-              </button>
-              <button
-                onClick={() => downloadImage("jpeg")}
-                className="px-4 py-2 bg-white text-slate-700 text-sm font-bold rounded-lg shadow hover:bg-slate-50 transition-colors"
-              >
-                JPG
-              </button>
-              <button
-                onClick={() => downloadImage("webp")}
-                className="px-4 py-2 bg-white text-slate-700 text-sm font-bold rounded-lg shadow hover:bg-slate-50 transition-colors"
-              >
-                WEBP
-              </button>
-            </div> */}
-
-            {/* <DesignCanvas
-              code={designCode}
-              customizations={{
-                texts: customTexts,
-                colors: customColors,
-                fontSize,
-              }}
-            /> */}
             <CanvasDownloader iframeRef={iframeRef} />
-            
             <DesignCanvass ref={iframeRef} htmlStringFromApi={designCode} />
-
-            {/* <div className="mt-8 text-center text-slate-500 text-sm">
-              <p>W: 600px | H: 800px | AI Assisted Render</p>
-            </div> */}
           </>
         ) : (
           <div className="text-center p-12 max-w-sm">
