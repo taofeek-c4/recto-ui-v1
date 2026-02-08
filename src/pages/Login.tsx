@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 
 interface LoginPageProps {
-  onLogin: (token: string) => void;
+  onLogin: () => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
@@ -23,8 +23,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       const response = await api.post('login', { email, password });
       
       if (response.access_token){
+        console.log(response.access_token)
+        localStorage.setItem('AUTH_TOKEN_KEY', response.access_token);
+        onLogin();
         navigate('/dashboard');
-        onLogin(response.access_token);
       } else {
         throw(response)
       }

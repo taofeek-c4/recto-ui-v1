@@ -21,8 +21,7 @@ const App: React.FC = () => {
     !!localStorage.getItem('AUTH_TOKEN_KEY')
   );
 
-  const login = (token: string) => {
-    localStorage.setItem('AUTH_TOKEN_KEY', token);
+  const login = () => {
     setIsAuthenticated(true);
   };
 
