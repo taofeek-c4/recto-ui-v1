@@ -5,7 +5,7 @@ import DesignCanvass from "../components/HTMLDesign";
 import CanvasDownloader from "../components/DownloadButton";
 import ChatMessages from "../components/ChatMessages";
 import { Message } from "../components/ChatMessages";
-import { useDashboardStore } from "../../store/dashboardStore";
+// import { useDashboardStore } from "../../store/dashboardStore";
 
 export const cleanResponse = (text: string) => {
   if (!text) return "";
@@ -22,7 +22,7 @@ const WorkspacePage: React.FC = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
   const navigate = useNavigate();
-  const { designs, setDesigns } = useDashboardStore();
+  // const { designs, setDesigns } = useDashboardStore();
 
   // Fetch conversation history when component mounts with an id
   useEffect(() => {
@@ -105,7 +105,7 @@ const WorkspacePage: React.FC = () => {
       console.error("Generation failed", error);
     } finally {
       setIsGenerating(false);
-      setDesigns([...designs, { session_id, preview: prompt }]);
+      // setDesigns([...designs, { session_id, preview: prompt }]);
     }
 
     if (!id) {
