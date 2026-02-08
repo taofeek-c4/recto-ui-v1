@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   NavLink,
   Outlet,
@@ -7,6 +7,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 
 const Layout: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
   const { signOut } = useAuth();
 
@@ -40,9 +41,18 @@ const Layout: React.FC = () => {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="hidden md:flex md:shrink-0">
-        <div className="flex flex-col w-64 bg-slate-900 text-white">
+      <aside className={`fixed md:static z-50 md:z-0 w-64 h-screen bg-slate-900 text-white flex flex-col transition-transform duration-300 ease-in-out ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      }`}>
           <div className="flex items-center h-16 px-6 bg-slate-950">
             <span className="text-2xl font-bold tracking-tighter text-indigo-400">
               RECTO
@@ -55,6 +65,7 @@ const Layout: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   end
+                  onClick={() => setSidebarOpen(false)}
                   className={({ isActive }) =>
                     `group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all ${
                       isActive
@@ -102,13 +113,30 @@ const Layout: React.FC = () => {
               Sign out
             </button>
           </div>
-        </div>
       </aside>
 
       {/* Main content */}
       <div className="flex flex-col flex-1 w-0 overflow-hidden">
         <header className="flex items-center justify-between h-16 px-6 bg-white border-b border-slate-200">
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
             <span className="text-xl font-bold text-indigo-600">RECTO</span>
           </div>
           <div className="hidden md:block">
