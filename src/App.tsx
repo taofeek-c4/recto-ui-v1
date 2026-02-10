@@ -21,6 +21,7 @@ import ProfilePage from "./pages/Profile";
 // Layout
 import Layout from "./components/Layout";
 import RectoLandingPage from "./pages/Landingpage";
+import UpdatePasswordPage from "./pages/UpdatePassWord";
 
 // --- Helper Components for Routing ---
 
@@ -81,6 +82,7 @@ const App: React.FC = () => {
             }
           />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/update-password" element={<UpdatePasswordPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
 
           {/* Protected Routes: Dashboard */}

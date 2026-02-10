@@ -7,16 +7,20 @@ const GalleryPage: React.FC = () => {
   // const [designs] = useState<any[]>([]);
 
   const { designs, setDesigns } = useDashboardStore();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // api.get("get_all_images").then(setDesigns);
     async function fetchDesigns() {
+      setLoading(true);
       try {
         const response = await api.get("sessions");
         setDesigns(response.sessions);
         // console.log(response.sessions);
       } catch (error) {
         console.error("Failed to fetch designs:", error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -24,6 +28,14 @@ const GalleryPage: React.FC = () => {
       fetchDesigns();
     }
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div>

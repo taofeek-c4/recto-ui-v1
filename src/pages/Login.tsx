@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { supabase } from "../../services/supabaseClient";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
+import { Eye, EyeClosed } from "lucide-react";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -21,11 +23,11 @@ const LoginPage: React.FC = () => {
     });
 
     if (error) {
-      setError(error.message)
-      setLoading(false)
+      setError(error.message);
+      setLoading(false);
     } else {
       // Success! Auto-refresh is now active.
-      navigate('/dashboard')
+      navigate("/dashboard");
     }
 
     // try {
@@ -78,7 +80,7 @@ const LoginPage: React.FC = () => {
               />
             </div>
 
-            <div>
+            <div className="relative">
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-slate-700">
                   Password
@@ -92,13 +94,25 @@ const LoginPage: React.FC = () => {
                 </Link>
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword((s) => !s)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-gray-600 hover:text-gray-900 mt-4 mr-4"
+              >
+                {showPassword ? (
+                  <Eye className="w-4 h-4" />
+                ) : (
+                  <EyeClosed className="w-4 h-4" />
+                )}
+              </button>
             </div>
 
             <button
